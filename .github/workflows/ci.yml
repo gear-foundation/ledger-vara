@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Manually triggered'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install clang
+        run: sudo apt-get update && sudo apt install -y clang arm-none-eabi-gcc gcc-multilib
+
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rust-src
+
+      - name: Install cargo-ledger
+        run: cargo install cargo-ledger --git=https://github.com/LedgerHQ/cargo-ledger
+
+      - name: Setup cargo-ledger
+        run: cargo ledger setup
+
+      - name: Cargo clippy
+        run: cargo clippy
+
+      - name: Cargo fmt
+        run: cargo fmt --all -- --check
+
+      - name: Build app
+        run: |
+          cargo ledger build nanos
+          cargo ledger build nanosplus
+          cargo ledger build nanox
