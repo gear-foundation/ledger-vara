@@ -20,8 +20,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install clang
-        run: sudo apt-get update && sudo apt install -y clang arm-none-eabi-gcc gcc-multilib
+      - name: Install toolchain
+        run: sudo apt-get update && sudo apt install -y clang gcc-arm-none-eabi gcc-multilib
 
       - uses: dtolnay/rust-toolchain@nightly
         with:
