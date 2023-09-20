@@ -55,3 +55,28 @@ Vara application for Ledger Nano S, S Plus, and X.
     cargo ledger build nanosplus
     cargo ledger build nanox
     ```
+
+2. Find `app-vara` file in the `target/nano{s|splus|x}/release` directory.
+
+## Upload to the Ledger S PLus
+
+0. **Linux only**. Tune udev rules:
+
+    ```bash
+    cd `mktemp -d`
+    wget https://raw.githubusercontent.com/LedgerHQ/udev-rules/master/add_udev_rules.sh
+    chmod +x add_udev_rules.sh
+    sudo ./add_udev_rules.sh
+    ```
+
+1. Reset your Ledger to the factory settings:
+
+    - Plug the device and enter PIN to unlock
+    - Enter **Settings**, choose **Security**
+    - Scroll down to **Reset device** and choose it
+    - Enter PIN to confirm hardware reset
+
+2. Enter recovery mode:
+
+    - Unplug device, press right button and while keeping it pressed, plug device back
+    - Wait until the welcome screen appears
