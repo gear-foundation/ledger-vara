@@ -25,7 +25,7 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@nightly
         with:
-          components: rust-src, clippy
+          components: rust-src, clippy, rust-fmt
 
       - name: Install cargo-ledger
         run: cargo install cargo-ledger --git=https://github.com/LedgerHQ/cargo-ledger
