@@ -1,0 +1,34 @@
+[target.nanos]
+rustflags = [
+  "-C", "codegen-units=1",
+  "-C", "save-temps", # Fixes incremental builds by keeping .bc and .ll files
+  "-C", "embed-bitcode",
+  "--emit=metadata,link,obj,llvm-ir,llvm-bc",
+]
+runner = "speculos -a=1 --model=nanos"
+
+[target.nanosplus]
+rustflags = [
+  "-C", "codegen-units=1",
+  "-C", "save-temps", # Fixes incremental builds by keeping .bc and .ll files
+  "-C", "embed-bitcode",
+  #"-C", "link-args=-lssp",
+  "--emit=metadata,link,obj,llvm-ir,llvm-bc",
+]
+runner = "speculos -a=1 --model=nanosp"
+
+[target.nanox]
+rustflags = [
+  "-C", "codegen-units=1",
+  "-C", "save-temps", # Fixes incremental builds by keeping .bc and .ll files
+  "-C", "embed-bitcode",
+  "--emit=metadata,link,obj,llvm-ir,llvm-bc",
+]
+runner = "speculos -a=1 --model=nanox"
+
+[build]
+target = "nanosplus"
+
+[unstable]
+build-std = ["core"]
+build-std-features = ["compiler-builtins-mem"]
