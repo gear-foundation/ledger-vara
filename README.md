@@ -48,6 +48,12 @@ Vara application for Ledger Nano S, S Plus, and X.
 
 1. Build the app:
 
+    macOS only:
+
+    ```bash
+    export CPATH=`xcrun --show-sdk-path`/usr/include
+    ```
+
     Ledger Nano S:
 
     ```bash
@@ -88,28 +94,30 @@ Vara application for Ledger Nano S, S Plus, and X.
 
 2. Enter recovery mode:
 
-    - Unplug device, press right button and while keeping it pressed, plug device back
-    - Wait until the welcome screen appears
+    - Unplug device, press left and right buttons simultaneously and while keeping them pressed, plug device back
+    - Wait until the menu appears and choose **Recovery mode**
 
-3. Load the app:
-
-    Ledger Nano S:
+3. Onboard the device with PIN=1111 and mnemonic phrase:
 
     ```bash
-    cargo ledger build nanos --load
+    ledgerctl onboard 1111 "bottom drive obey lake curtain smoke basket hold race lonely fit walk"
     ```
 
-    Ledger Nano S Plus:
+    Wait for a while. Then install the CA:
+
+    ```bash
+    ledgerctl install-ca dev
+    ```
+
+    Confirm the installation on the device.
+
+4. Load the app:
 
     ```bash
     cargo ledger build nanosplus --load
     ```
 
-    Ledger Nano X:
-
-    ```bash
-    cargo ledger build nanox --load
-    ```
+    Confirm the installation on the device.
 
 # License
 

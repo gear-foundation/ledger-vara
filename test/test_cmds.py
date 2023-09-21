@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from ledgerblue.commTCP import getDongle as getDongleTCP
 from ledgerblue.comm import getDongle
 
@@ -11,21 +13,22 @@ CMDS = [
     "8003000020" + "00112233445566778899aabbccddeeff0123456789abcdeffedcba9876543210",
     "8003000020" + rand_msg,
     "8004",
-    "80050008",
-    "80FE",
     "80FF",
 ]
 
-d = getDongleTCP(port=9999)     # Speculos
-# d = getDongle()               # Nano
+# Uncomment if using Speculos
+# d = getDongleTCP(port=9999)
+
+# Uncomment if using Nano
+d = getDongle()
 
 from time import sleep
 for cmd in map(unhexlify,CMDS):
-    r = None 
+    r = None
     try:
         r = d.exchange(cmd, 20)
         sleep(1)
     except Exception as e:
         print(e)
-    if r is not None: 
+    if r is not None:
         print("Response : ", hexlify(r))
