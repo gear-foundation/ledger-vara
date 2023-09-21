@@ -165,3 +165,27 @@ fn handle_apdu(comm: &mut io::Comm, ins: Ins) -> Result<(), Reply> {
     }
     Ok(())
 }
+
+#[cfg(host_os = "macos")]
+#[no_mangle]
+extern "C" fn __memmove_chk(
+    dest: *mut core::ffi::c_void,
+    src: *const core::ffi::c_void,
+    len: usize,
+    destlen: usize,
+) {
+    assert!(len <= destlen);
+    unsafe { core::ptr::copy(src, dest, len) };
+}
+
+#[cfg(host_os = "macos")]
+#[no_mangle]
+extern "C" fn __memcpy_chk(
+    dest: *mut core::ffi::c_void,
+    src: *const core::ffi::c_void,
+    len: usize,
+    destlen: usize,
+) {
+    assert!(len <= destlen);
+    unsafe { core::ptr::copy_nonoverlapping(src, dest, len) };
+}

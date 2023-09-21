@@ -48,17 +48,27 @@ Vara application for Ledger Nano S, S Plus, and X.
 
 1. Build the app:
 
-    ```
-    export CPATH=`xcrun --show-sdk-path`/usr/include # macOS only
+    Ledger Nano S:
 
+    ```bash
     cargo ledger build nanos
+    ```
+
+    Ledger Nano S Plus:
+
+    ```bash
     cargo ledger build nanosplus
+    ```
+
+    Ledger Nano X:
+
+    ```bash
     cargo ledger build nanox
     ```
 
 2. Find `app-vara` file in the `target/nano{s|splus|x}/release` directory.
 
-## Upload to the Ledger S PLus
+## Upload to the Ledger S Plus
 
 0. **Linux only**. Tune udev rules:
 
@@ -80,3 +90,27 @@ Vara application for Ledger Nano S, S Plus, and X.
 
     - Unplug device, press right button and while keeping it pressed, plug device back
     - Wait until the welcome screen appears
+
+3. Load the app:
+
+    Ledger Nano S:
+
+    ```bash
+    cargo ledger build nanos --load
+    ```
+
+    Ledger Nano S Plus:
+
+    ```bash
+    cargo ledger build nanosplus --load
+    ```
+
+    Ledger Nano X:
+
+    ```bash
+    cargo ledger build nanox --load
+    ```
+
+# License
+
+The source code is released under the terms of the [Apache License 2.0](LICENSE).
