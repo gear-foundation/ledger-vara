@@ -1,0 +1,35 @@
+[package]
+name = "app-vara"
+version = "0.0.1"
+authors = ["Gear Foundation"]
+edition = "2021"
+
+[dependencies]
+nanos_sdk = { git = "https://github.com/LedgerHQ/ledger-nanos-sdk.git" }
+nanos_ui = { git = "https://github.com/LedgerHQ/ledger-nanos-ui.git" }
+
+[profile.release]
+opt-level = 'z'
+lto = true
+
+[features]
+pending_review_screen = ["nanos_sdk/pending_review_screen"]
+
+[package.metadata.ledger]
+name = "Vara"
+curve = ["ed25519"]
+flags = "0"
+path = [""]
+api_level = "1"
+
+[package.metadata.ledger.nanos]
+icon = "assets/icon.gif"
+icon_small = "assets/icon_small.gif"
+
+[package.metadata.ledger.nanosplus]
+icon = "assets/icon_inv.gif"
+icon_small = "assets/icon_inv_small.gif"
+
+[package.metadata.ledger.nanox]
+icon = "assets/icon_inv.gif"
+icon_small = "assets/icon_inv_small.gif"
