@@ -1,4 +1,4 @@
-# Vara Application for Ledger Nano S / S PLus / X
+# Vara Application for Ledger Nano S / S Plus / X
 
 Vara application for Ledger Nano S, S Plus, and X.
 

@@ -9,11 +9,11 @@ from binascii import hexlify, unhexlify
 rand_msg = hexlify(rnd(256).to_bytes(32, 'big')).decode()
 
 CMDS = [
-    "8002",
-    "8003000020" + "00112233445566778899aabbccddeeff0123456789abcdeffedcba9876543210",
-    "8003000020" + rand_msg,
-    "8004",
-    "80FF",
+    "8002", # Get Pub Key
+    "8003000020" + "00112233445566778899aabbccddeeff0123456789abcdeffedcba9876543210", # Sign Message
+    "8003000020" + rand_msg, # Sign Random Message
+    "8004", # Show Menu
+    "80FF", # Quit
 ]
 
 # Uncomment if using Speculos
@@ -23,7 +23,7 @@ CMDS = [
 d = getDongle()
 
 from time import sleep
-for cmd in map(unhexlify,CMDS):
+for cmd in map(unhexlify, CMDS):
     r = None
     try:
         r = d.exchange(cmd, 20)

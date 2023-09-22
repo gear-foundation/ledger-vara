@@ -23,13 +23,10 @@ path = [""]
 api_level = "1"
 
 [package.metadata.ledger.nanos]
-icon = "assets/icon.gif"
-icon_small = "assets/icon_small.gif"
+icon = "assets/icon_s.gif"
 
 [package.metadata.ledger.nanosplus]
-icon = "assets/icon_inv.gif"
-icon_small = "assets/icon_inv_small.gif"
+icon = "assets/icon_x.gif"
 
 [package.metadata.ledger.nanox]
-icon = "assets/icon_inv.gif"
-icon_small = "assets/icon_inv_small.gif"
+icon = "assets/icon_x.gif"
