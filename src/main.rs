@@ -6,12 +6,13 @@ mod utils;
 #[cfg(host_os = "macos")]
 mod macos_lib;
 
-use core::str::from_utf8;
-use nanos_sdk::buttons::ButtonEvent;
-use nanos_sdk::ecc::{Secp256k1, SeedDerive};
-use nanos_sdk::io;
-use nanos_sdk::io::SyscallError;
-use nanos_ui::ui;
+use core::str;
+use nanos_sdk::{
+    buttons::ButtonEvent,
+    ecc::{Secp256k1, SeedDerive},
+    io::{ApduHeader, Comm, Event, Reply, StatusWords, SyscallError},
+};
+use nanos_ui::ui::{self, Menu, MessageScroller, SingleMessage, Validator};
 
 nanos_sdk::set_panic!(nanos_sdk::exiting_panic);
 
@@ -25,13 +26,13 @@ fn show_pubkey() {
         Ok(pk) => {
             {
                 let hex0 = utils::to_hex(&pk.as_ref()[1..33]).unwrap();
-                let m = from_utf8(&hex0).unwrap();
-                ui::MessageScroller::new(m).event_loop();
+                let m = str::from_utf8(&hex0).unwrap();
+                MessageScroller::new(m).event_loop();
             }
             {
                 let hex1 = utils::to_hex(&pk.as_ref()[33..65]).unwrap();
-                let m = from_utf8(&hex1).unwrap();
-                ui::MessageScroller::new(m).event_loop();
+                let m = str::from_utf8(&hex1).unwrap();
+                MessageScroller::new(m).event_loop();
             }
         }
         Err(_) => ui::popup("Error"),
@@ -40,21 +41,20 @@ fn show_pubkey() {
 
 /// Basic nested menu. Will be subject
 /// to simplifications in the future.
-#[allow(clippy::needless_borrow)]
 fn menu_example() {
     loop {
-        match ui::Menu::new(&[&"PubKey", &"Infos", &"Back", &"Exit App"]).show() {
+        match Menu::new(&[&"PubKey", &"Infos", &"Back", &"Exit App"]).show() {
             0 => show_pubkey(),
             1 => loop {
-                match ui::Menu::new(&[&"Copyright", &"Authors", &"Back"]).show() {
-                    0 => ui::popup("2020 Ledger"),
-                    1 => ui::popup("???"),
+                match Menu::new(&[&"Copyright", &"Authors", &"Back"]).show() {
+                    0 => ui::popup("2023 Gear Foundation"),
+                    1 => ui::popup("Gear Foundation"),
                     _ => break,
                 }
             },
             2 => return,
             3 => nanos_sdk::exit_app(0),
-            _ => (),
+            _ => unreachable!("Invalid menu index"),
         }
     }
 }
@@ -67,16 +67,16 @@ fn sign_ui(message: &[u8]) -> Result<Option<([u8; 72], u32, u32)>, SyscallError>
 
     {
         let hex = utils::to_hex(message).map_err(|_| SyscallError::Overflow)?;
-        let m = from_utf8(&hex).map_err(|_| SyscallError::InvalidParameter)?;
+        let m = str::from_utf8(&hex).map_err(|_| SyscallError::InvalidParameter)?;
 
-        ui::MessageScroller::new(m).event_loop();
+        MessageScroller::new(m).event_loop();
     }
 
-    if ui::Validator::new("Sign ?").ask() {
+    if Validator::new("Sign ?").ask() {
         let signature = Secp256k1::derive_from_path(&BIP32_PATH)
             .deterministic_sign(message)
             .map_err(|_| SyscallError::Unspecified)?;
-        ui::popup("Done !");
+        ui::popup("Done!");
         Ok(Some(signature))
     } else {
         ui::popup("Cancelled");
@@ -86,17 +86,17 @@ fn sign_ui(message: &[u8]) -> Result<Option<([u8; 72], u32, u32)>, SyscallError>
 
 #[no_mangle]
 extern "C" fn sample_pending() {
-    let mut comm = io::Comm::new();
+    let mut comm = Comm::new();
 
     loop {
-        ui::SingleMessage::new("Pending").show();
-        if let io::Event::Button(ButtonEvent::RightButtonRelease) = comm.next_event::<Ins>() {
+        SingleMessage::new("Pending").show();
+        if let Event::Button(ButtonEvent::RightButtonRelease) = comm.next_event::<Ins>() {
             break;
         }
     }
     loop {
-        ui::SingleMessage::new("Ledger review").show();
-        if let io::Event::Button(ButtonEvent::BothButtonsRelease) = comm.next_event::<Ins>() {
+        SingleMessage::new("Ledger review").show();
+        if let Event::Button(ButtonEvent::BothButtonsRelease) = comm.next_event::<Ins>() {
             break;
         }
     }
@@ -104,17 +104,17 @@ extern "C" fn sample_pending() {
 
 #[no_mangle]
 extern "C" fn sample_main() {
-    let mut comm = io::Comm::new();
+    let mut comm = Comm::new();
 
     loop {
         // Draw some 'welcome' screen
-        ui::SingleMessage::new("W e l c o m e").show();
+        SingleMessage::new("W e l c o m e").show();
 
         // Wait for either a specific button push to exit the app
         // or an APDU command
         match comm.next_event() {
-            io::Event::Button(ButtonEvent::RightButtonRelease) => nanos_sdk::exit_app(0),
-            io::Event::Command(ins) => match handle_apdu(&mut comm, ins) {
+            Event::Button(ButtonEvent::RightButtonRelease) => nanos_sdk::exit_app(0),
+            Event::Command(ins) => match handle_apdu(&mut comm, ins) {
                 Ok(()) => comm.reply_ok(),
                 Err(sw) => comm.reply(sw),
             },
@@ -125,36 +125,34 @@ extern "C" fn sample_main() {
 
 #[repr(u8)]
 enum Ins {
-    GetPubkey,
+    GetPubkey = 2,
     Sign,
     Menu,
-    Exit,
+    Exit = 0xFF,
 }
 
-impl From<io::ApduHeader> for Ins {
-    fn from(header: io::ApduHeader) -> Ins {
+impl From<ApduHeader> for Ins {
+    fn from(header: ApduHeader) -> Ins {
         match header.ins {
             2 => Ins::GetPubkey,
             3 => Ins::Sign,
             4 => Ins::Menu,
-            0xff => Ins::Exit,
-            _ => panic!(),
+            0xFF => Ins::Exit,
+            _ => unreachable!("Invalid INS"),
         }
     }
 }
 
-use nanos_sdk::io::Reply;
-
-fn handle_apdu(comm: &mut io::Comm, ins: Ins) -> Result<(), Reply> {
+fn handle_apdu(comm: &mut Comm, ins: Ins) -> Result<(), Reply> {
     if comm.rx == 0 {
-        return Err(io::StatusWords::NothingReceived.into());
+        return Err(StatusWords::NothingReceived.into());
     }
 
     match ins {
         Ins::GetPubkey => {
             let pk = Secp256k1::derive_from_path(&BIP32_PATH)
                 .public_key()
-                .map_err(|x| Reply(0x6eu16 | (x as u16 & 0xff)))?;
+                .map_err(|x| Reply(0x6e_u16 | (x as u16 & 0xff)))?;
             comm.append(pk.as_ref());
         }
         Ins::Sign => {
