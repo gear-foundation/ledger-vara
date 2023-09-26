@@ -7,19 +7,19 @@
   remote_user: ubuntu
   vars:
     devices:
-      - model: Nano S
-        id: nanos
-        app: app-vara-nanos
+      - id: nanos
+        target: nanos
+        name: Nano S
         port: 5000
 
-      - model: Nano S Plus
-        id: nanosp
-        app: app-vara-nanosplus
+      - id: nanosp
+        target: nanosplus
+        name: Nano S Plus
         port: 5001
 
-      - model: Nano X
-        id: nanox
-        app: app-vara-nanox
+      - id: nanox
+        target: nanox
+        name: Nano X
         port: 5002
 
   tasks:

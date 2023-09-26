@@ -12,7 +12,6 @@ env:
 
 jobs:
   build:
-    if: false # FIXME: Remove this line when the CI is ready
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -42,3 +41,12 @@ jobs:
           cargo ledger build nanos
           cargo ledger build nanosplus
           cargo ledger build nanox
+
+      - name: Deploy
+        if: true # TODO: Replace by condition
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          directory: ansible
+          playbook: update-apps.yml
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          inventory: ledger.vara.rs

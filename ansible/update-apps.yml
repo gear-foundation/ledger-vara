@@ -1,0 +1,42 @@
+# Run
+#     ansible-playbook update-apps.yml -i ledger.vara.rs,
+#
+---
+- name: Update Apps
+  hosts: all
+  remote_user: ubuntu
+  vars:
+    devices:
+      - id: nanos
+        target: nanos
+
+      - id: nanosp
+        target: nanosplus
+
+      - id: nanox
+        target: nanox
+
+  tasks:
+    - name: Stop services
+      become: yes
+      loop: '{{ devices }}'
+      ignore_errors: yes
+      systemd:
+        name: speculos-{{ item.id }}
+        state: stopped
+
+    - name: Copy executables
+      become: yes
+      loop: '{{ devices }}'
+      copy:
+        src: ../target/{{ item.target }}/release/app-vara
+        dest: /opt/speculos/app-vara-{{ item.target }}
+
+    - name: Start services
+      become: yes
+      loop: '{{ devices }}'
+      systemd:
+        name: speculos-{{ item.id }}
+        state: started
+        enabled: yes
+        daemon_reload: yes

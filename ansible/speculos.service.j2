@@ -1,12 +1,12 @@
 [Unit]
-Description=Speculos for Ledger {{ item.model }}
+Description=Speculos for Ledger {{ item.name }}
 After=network.target
 
 [Service]
 Type=simple
 User=root
 Group=root
-ExecStart=/opt/speculos.py -m {{ item.id }} --api-port {{ item.port }} --display headless /opt/speculos/{{ item.app }}
+ExecStart=/opt/speculos.py -m {{ item.id }} --api-port {{ item.port }} --display headless /opt/speculos/app-vara-{{ item.target }}
 Restart=always
 RestartSec=3
 
