@@ -43,7 +43,7 @@ jobs:
           cargo ledger build nanox
 
       - name: Deploy
-        if: true # TODO: Replace by condition
+        if: github.event_name == 'push'
         uses: dawidd6/action-ansible-playbook@v2
         with:
           directory: ansible
