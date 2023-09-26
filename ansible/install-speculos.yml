@@ -6,21 +6,25 @@
   hosts: all
   remote_user: ubuntu
   vars:
+    seed: bottom drive obey lake curtain smoke basket hold race lonely fit walk
     devices:
       - id: nanos
         target: nanos
         name: Nano S
-        port: 5000
+        api_port: 5000
+        apdu_port: 6000
 
       - id: nanosp
         target: nanosplus
         name: Nano S Plus
-        port: 5001
+        api_port: 5001
+        apdu_port: 6001
 
       - id: nanox
         target: nanox
         name: Nano X
-        port: 5002
+        api_port: 5002
+        apdu_port: 6002
 
   tasks:
     - name: Enable firewall
@@ -63,11 +67,29 @@
         owner: root
         group: root
 
+    - name: Install Speculos dependencies
+      become: yes
+      apt:
+        name: [python3-construct, python3-flask-restful, python3-mnemonic, python3-pil, python3-pyelftools, qemu-user-static]
+        state: latest
+        update_cache: yes
+
+    - name: Copy script
+      become: yes
+      copy:
+        src: ../artifact/speculos.py
+        dest: /opt/speculos/
+        force: yes
+        group: root
+        owner: root
+        mode: '0755'
+
     - name: Copy executables
       become: yes
       synchronize:
-        src: ../artifact
+        src: ../artifact/speculos
         dest: /opt/speculos
+        delete: true
 
     - name: Copy SystemD configs
       become: yes

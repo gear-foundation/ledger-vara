@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=root
 Group=root
-ExecStart=/opt/speculos.py -m {{ item.id }} --api-port {{ item.port }} --display headless /opt/speculos/app-vara-{{ item.target }}
+ExecStart=/opt/speculos/speculos.py -m {{ item.id }} --api-port {{ item.api_port }} --apdu-port {{ item.apdu_port }} -s "{{ seed }}" --display headless  /opt/speculos/app-vara-{{ item.target }}
 Restart=always
 RestartSec=3
 
