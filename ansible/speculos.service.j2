@@ -1,0 +1,14 @@
+[Unit]
+Description=Speculos for Ledger {{ item.model }}
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/opt/speculos.py -m {{ item.id }} --api-port {{ item.port }} --display headless /opt/speculos/{{ item.app }}
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

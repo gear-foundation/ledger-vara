@@ -24,7 +24,7 @@ jobs:
           python3-mnemonic python3-pil python3-pyelftools python3-requests
           qemu-user-static
 
-      - name: Build `speculos`
+      - name: Build Speculos
         run: |
           cmake -B build/ -S . && cd build
           make openssl
@@ -33,7 +33,9 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          path: speculos
+          path: |
+            speculos.py
+            speculos
 
   deploy:
     needs: build
@@ -44,3 +46,16 @@ jobs:
 
       - name: Download artifacts
         uses: actions/download-artifact@v3
+
+      - name: List artifacts
+        run: |
+          pwd
+          ls -la artifact
+
+      - name: Deploy
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          directory: ansible
+          playbook: install-speculos.yml
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          inventory: ledger.vara.rs
