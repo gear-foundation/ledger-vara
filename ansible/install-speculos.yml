@@ -8,23 +8,9 @@
   vars:
     seed: bottom drive obey lake curtain smoke basket hold race lonely fit walk
     devices:
-      - id: nanos
-        target: nanos
-        name: Nano S
-        api_port: 5000
-        apdu_port: 6000
-
       - id: nanosp
         target: nanosplus
         name: Nano S Plus
-        api_port: 5001
-        apdu_port: 6001
-
-      - id: nanox
-        target: nanox
-        name: Nano X
-        api_port: 5002
-        apdu_port: 6002
 
   tasks:
     - name: Enable firewall
