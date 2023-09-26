@@ -29,6 +29,7 @@ jobs:
           cmake -B build/ -S . && cd build
           make openssl
           make launcher
+          make preinstall
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
