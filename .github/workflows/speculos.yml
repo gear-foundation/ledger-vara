@@ -1,8 +1,6 @@
 name: Speculos
 
 on:
-  pull_request: # TODO: Remove after debug
-    branches: [master]
   workflow_dispatch:
 
 env:
@@ -25,11 +23,7 @@ jobs:
           qemu-user-static
 
       - name: Build Speculos
-        run: |
-          cmake -B build/ -S . && cd build
-          make openssl
-          make launcher
-          make preinstall
+        run: cmake -B build/ -S . && make -C build/
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
