@@ -46,7 +46,7 @@ jobs:
         run: |
           pwd
           ls -la artifact
-          chmod +x artifact/speculos/speculos/resources/launcher
+          chmod +x artifact/speculos/resources/launcher
 
       - name: Deploy
         uses: dawidd6/action-ansible-playbook@v2
