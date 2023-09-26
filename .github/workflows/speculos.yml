@@ -1,0 +1,56 @@
+name: Speculos
+
+on:
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: LedgerHQ/speculos
+
+      - name: Install dependencies
+        run: >-
+          sudo apt-get update && sudo apt-get install -y gcc-arm-linux-gnueabihf
+          python3-pyqt5 python3-construct python3-flask-restful python3-jsonschema
+          python3-mnemonic python3-pil python3-pyelftools python3-requests
+          qemu-user-static
+
+      - name: Build Speculos
+        run: cmake -B build/ -S . && make -C build/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: |
+            speculos.py
+            speculos
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+
+      - name: List artifacts
+        run: |
+          pwd
+          ls -la artifact
+
+      - name: Deploy
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          directory: ansible
+          playbook: install-speculos.yml
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          inventory: ledger.vara.rs

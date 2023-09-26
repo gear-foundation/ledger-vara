@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [master]
   workflow_dispatch:
-    inputs:
-      name:
-        description: 'Manually triggered'
 
 env:
   CARGO_TERM_COLOR: always
@@ -21,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install toolchain
-        run: sudo apt-get update && sudo apt install -y clang gcc-arm-none-eabi gcc-multilib
+        run: sudo apt-get update && sudo apt-get install -y clang gcc-arm-none-eabi gcc-multilib
 
       - uses: dtolnay/rust-toolchain@nightly
         with:
@@ -44,3 +41,12 @@ jobs:
           cargo ledger build nanos
           cargo ledger build nanosplus
           cargo ledger build nanox
+
+      - name: Deploy
+        if: github.event_name == 'push'
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          directory: ansible
+          playbook: update-apps.yml
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          inventory: ledger.vara.rs

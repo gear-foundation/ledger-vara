@@ -1,0 +1,14 @@
+[Unit]
+Description=Speculos for Ledger {{ item.name }}
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/opt/speculos/speculos.py -m {{ item.id }} --api-port {{ item.api_port }} --apdu-port {{ item.apdu_port }} -s "{{ seed }}" --display headless  /opt/speculos/app-vara-{{ item.target }}
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
