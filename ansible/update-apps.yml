@@ -7,14 +7,8 @@
   remote_user: ubuntu
   vars:
     devices:
-      - id: nanos
-        target: nanos
-
       - id: nanosp
         target: nanosplus
-
-      - id: nanox
-        target: nanox
 
   tasks:
     - name: Stop services
