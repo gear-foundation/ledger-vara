@@ -30,5 +30,3 @@ jobs:
           make openssl
           make launcher
           ls -rvf ../speculos
-
-      - name: Deploy
