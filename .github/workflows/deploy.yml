@@ -1,8 +1,6 @@
 name: Deploy
 
 on:
-  push:
-    branches: [master]
   pull_request: # TODO: Remove after debug
     branches: [master]
   workflow_dispatch:
@@ -24,8 +22,10 @@ jobs:
 
       - name: Install dependencies
         run: >-
-          sudo apt-get update && sudo apt install -y
-            clang gcc-arm-none-eabi gcc-multilib
+          sudo apt-get update && sudo apt-get install -y
+          python3-pyqt5 python3-construct python3-flask-restful python3-jsonschema
+          python3-mnemonic python3-pil python3-pyelftools python3-requests
+          qemu-user-static
 
       - name: Build `speculos`
         run: |
