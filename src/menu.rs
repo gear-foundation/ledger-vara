@@ -1,6 +1,7 @@
 use include_gif::include_gif;
 use ledger_prompts_ui::{
-    Menu, MenuLabelBottom, MenuLabelTop, DASHBOARD_ICON, MENU_ICON_X, MENU_ICON_Y, SETTINGS_ICON, BACK_ICON
+    Menu, MenuLabelBottom, MenuLabelTop, BACK_ICON, DASHBOARD_ICON, MENU_ICON_X, MENU_ICON_Y,
+    SETTINGS_ICON,
 };
 use nanos_sdk::buttons::ButtonEvent;
 use nanos_ui::{bagls::Icon, bitmaps::Glyph};
