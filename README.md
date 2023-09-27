@@ -119,6 +119,15 @@ Vara application for Ledger Nano S, S Plus, and X.
 
     Confirm the installation on the device.
 
+## Live Demo
+
+1. Go to https://ledger.vara.rs
+2. Use arrow keys (← and →) to simulate pressing Ledger's buttons (left and right).
+3. Use the down arrow key (↓) to simulate pressing both Ledger's buttons simultaneously.
+4. The application will be automatically restarted after quitting. Please reload the page after waiting for 5-10 seconds. The server may return a 502 error for some time; please try to reload the page again.
+5. Note that application is stateful and will not work properly if there are several users at the same time.
+6. For available APDU commands, see documentation (will be available soon).
+
 # License
 
 The source code is released under the terms of the [Apache License 2.0](LICENSE).

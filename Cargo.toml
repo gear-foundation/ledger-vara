@@ -5,6 +5,8 @@ authors = ["Gear Foundation"]
 edition = "2021"
 
 [dependencies]
+include_gif = { git = "https://github.com/LedgerHQ/sdk_include_gif" }
+ledger-prompts-ui = { git = "https://github.com/alamgu/ledger-prompts-ui.git" }
 nanos_sdk = { git = "https://github.com/LedgerHQ/ledger-nanos-sdk.git" }
 nanos_ui = { git = "https://github.com/LedgerHQ/ledger-nanos-ui.git" }
 
