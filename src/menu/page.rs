@@ -207,7 +207,7 @@ impl<'a> PageItem<'a> {
 }
 
 impl<'a> Text<'a> {
-    pub const fn to_label(&self) -> Label<'a> {
+    pub const fn to_label(&'a self) -> Label<'a> {
         let label = Label::from_const(self.text).location(Location::Custom(self.y));
         if self.bold {
             label.bold()
