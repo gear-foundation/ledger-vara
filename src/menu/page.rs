@@ -208,7 +208,15 @@ impl<'a> PageItem<'a> {
 
 impl<'a> Text<'a> {
     pub const fn to_label(&self) -> Label<'a> {
-        let label = Label::from_const(self.text).location(Location::Custom(self.y));
+        // TODO: Fix `from_const()` and `text()` methods in `mcu::Label`
+        #[cfg(target_os = "nanos")]
+        let mut label = Label::new().location(Location::Custom(self.y));
+
+        #[cfg(not(target_os = "nanos"))]
+        let mut label = Label::from_const(self.text).location(Location::Custom(self.y));
+
+        label.text = self.text;
+
         if self.bold {
             label.bold()
         } else {
