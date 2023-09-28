@@ -1,4 +1,4 @@
-use ledger_prompts_ui::{Menu, MenuLabelBottom, MenuLabelTop, BACK_ICON};
+use crate::menu::{Menu, MenuAction, MenuPage};
 
 /// Settings.
 #[derive(Default)]
@@ -20,54 +20,49 @@ pub enum SettingsMenu {
 }
 
 impl Menu for Settings {
-    type BothResult = ();
-    fn move_left(&mut self) {
+    fn prev(&mut self) {
+        self.page().hide();
         match self.menu {
             SettingsMenu::DebugMode => self.menu = SettingsMenu::Back,
             SettingsMenu::Back => self.menu = SettingsMenu::DebugMode,
         }
+        self.page().show();
     }
 
-    fn move_right(&mut self) {
+    fn next(&mut self) {
+        self.page().hide();
         match self.menu {
             SettingsMenu::DebugMode => self.menu = SettingsMenu::Back,
             SettingsMenu::Back => self.menu = SettingsMenu::DebugMode,
         }
+        self.page().show();
     }
 
-    fn handle_both(&mut self) -> Option<Self::BothResult> {
+    fn action(&mut self) -> MenuAction {
         match self.menu {
             SettingsMenu::DebugMode => {
                 self.debug_mode = !self.debug_mode;
-                None
+                MenuAction::Update
             }
             SettingsMenu::Back => {
                 self.menu = Default::default();
-                Some(())
+                MenuAction::Exit
             }
         }
     }
 
-    fn label<'a>(&self) -> (MenuLabelTop<'a>, MenuLabelBottom<'a>) {
+    fn page(&self) -> MenuPage {
         match self.menu {
-            SettingsMenu::DebugMode => (
-                MenuLabelTop::Text("Debug mode"),
-                MenuLabelBottom {
-                    text: if self.debug_mode {
+            SettingsMenu::DebugMode => {
+                MenuPage::new()
+                    .bold_text("Debug mode")
+                    .text(if self.debug_mode {
                         "Enabled"
                     } else {
                         "Disabled"
-                    },
-                    bold: false,
-                },
-            ),
-            SettingsMenu::Back => (
-                MenuLabelTop::Icon(&BACK_ICON),
-                MenuLabelBottom {
-                    text: "Back",
-                    bold: false,
-                },
-            ),
+                    })
+            }
+            SettingsMenu::Back => MenuPage::new().back_icon().text("Back"),
         }
     }
 }
