@@ -1,4 +1,4 @@
 [toolchain]
-channel = "nightly"
+channel = "nightly-2023-09-24"
 components = ["llvm-tools"]
 profile = "default"
