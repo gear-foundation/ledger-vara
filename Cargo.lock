@@ -7,16 +7,9 @@ name = "app-vara"
 version = "0.0.1"
 dependencies = [
  "include_gif",
- "ledger-prompts-ui",
  "nanos_sdk",
  "nanos_ui",
 ]
-
-[[package]]
-name = "arrayvec"
-version = "0.7.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "96d30a06541fbafbc7f82ed10c06164cfbd2c401138f6addd8404629c4b16711"
 
 [[package]]
 name = "autocfg"
@@ -56,27 +49,6 @@ source = "git+https://github.com/LedgerHQ/sdk_include_gif#699d28c6157518c4493899
 dependencies = [
  "gif",
  "syn",
-]
-
-[[package]]
-name = "ledger-log"
-version = "0.2.0"
-source = "git+https://github.com/alamgu/ledger-log.git#a417ebe6a426bbc6f92e92272c944b89765c384d"
-dependencies = [
- "arrayvec",
- "nanos_sdk",
-]
-
-[[package]]
-name = "ledger-prompts-ui"
-version = "0.1.0"
-source = "git+https://github.com/alamgu/ledger-prompts-ui.git#8d510e62f4d53ee999c3db510cc2e932c188de13"
-dependencies = [
- "arrayvec",
- "include_gif",
- "ledger-log",
- "nanos_sdk",
- "nanos_ui",
 ]
 
 [[package]]
