@@ -15,6 +15,7 @@ lto = true
 
 [features]
 pending_review_screen = ["nanos_sdk/pending_review_screen"]
+speculos = ["nanos_sdk/speculos", "nanos_ui/speculos"]
 
 [package.metadata.ledger]
 name = "Vara"
