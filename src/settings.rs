@@ -62,7 +62,7 @@ impl Menu for Settings {
                         "Disabled"
                     })
             }
-            SettingsMenu::Back => MenuPage::new().back_icon().text("Back"),
+            SettingsMenu::Back => MenuPage::new().back_icon().bold_text("Back"),
         }
     }
 }
