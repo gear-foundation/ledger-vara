@@ -19,9 +19,9 @@ speculos = ["nanos_sdk/speculos", "nanos_ui/speculos"]
 
 [package.metadata.ledger]
 name = "Vara"
-curve = ["secp256k1"]
+curve = ["ed25519"]
 flags = "0"
-path = [""]
+path = ["44'/913'"]
 api_level = "1"
 
 [package.metadata.ledger.nanos]
