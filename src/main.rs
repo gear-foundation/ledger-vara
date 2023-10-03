@@ -1,10 +1,10 @@
 #![no_std]
 #![no_main]
 
-mod apdu;
 mod app;
 mod menu;
 mod settings;
+mod utils;
 
 #[cfg(host_os = "macos")]
 mod macos_lib;
@@ -24,7 +24,12 @@ extern "C" fn sample_main() {
     loop {
         match comm.next_event() {
             Event::Button(button) => app.handle_button(button),
-            Event::Command(ins) => app.handle_command(&mut comm, ins),
+            Event::Command(header) => {
+                _ = app
+                    .handle_command(&mut comm, header)
+                    .map(|_| comm.reply_ok())
+                    .map_err(|err| comm.reply(err));
+            }
             _ => (),
         }
     }

@@ -1,12 +1,17 @@
 use crate::{
-    apdu::{self, Ins},
     menu::{Menu, MenuAction, MenuPage},
     settings::Settings,
+    utils,
 };
 use nanos_sdk::{
     buttons::ButtonEvent,
-    io::{Comm, StatusWords},
+    io::{ApduHeader, Comm, StatusWords},
 };
+
+const APDU_CLA: u8 = 0x89;
+const INS_GET_VERSION: u8 = 0x00;
+const INS_GET_PUBLIC_KEY: u8 = 0x01;
+const INS_QUIT: u8 = 0xFF;
 
 /// Application struct.
 #[derive(Default)]
@@ -100,20 +105,39 @@ impl App {
     /// Handle button event.
     pub fn handle_button(&mut self, button: ButtonEvent) {
         match self.handle_button_event(button) {
-            //MenuAction::Update => self.show(),
             MenuAction::Exit => nanos_sdk::exit_app(0),
             _ => (),
         }
     }
 
     /// Handle command event.
-    pub fn handle_command(&mut self, comm: &mut Comm, ins: Ins) {
+    pub fn handle_command(
+        &mut self,
+        comm: &mut Comm,
+        header: ApduHeader,
+    ) -> Result<(), StatusWords> {
         if comm.rx == 0 {
-            comm.reply(StatusWords::NothingReceived);
-            return;
+            return Err(StatusWords::NothingReceived);
         }
-        _ = apdu::handle_apdu(ins)
-            .map(|_| comm.reply_ok())
-            .map_err(|err| comm.reply(err));
+        if header.cla != APDU_CLA {
+            return Err(StatusWords::BadCla);
+        }
+        match header.ins {
+            INS_GET_VERSION => {
+                let major = utils::bytes_to_u16(env!("CARGO_PKG_VERSION_MAJOR").as_bytes());
+                comm.append(&major.to_be_bytes());
+                let minor = utils::bytes_to_u16(env!("CARGO_PKG_VERSION_MINOR").as_bytes());
+                comm.append(&minor.to_be_bytes());
+                let patch = utils::bytes_to_u16(env!("CARGO_PKG_VERSION_PATCH").as_bytes());
+                comm.append(&patch.to_be_bytes());
+            }
+            INS_GET_PUBLIC_KEY => {
+                let key = utils::get_public_key();
+                comm.append(&key);
+            }
+            INS_QUIT => nanos_sdk::exit_app(0),
+            _ => return Err(StatusWords::BadIns),
+        }
+        Ok(())
     }
 }
