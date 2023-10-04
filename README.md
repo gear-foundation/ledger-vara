@@ -196,13 +196,23 @@ Example (v1.20.2840): `0x0001'0014'0B18'9000`
 
 ### Request
 
-| Field:        | CLA  | INS  | P1  | P2  | Data len  | Data      |
-|-------------- | ---- | ---- | --- | --- | --------- | --------- |
-| Offset:       | 0    | 1    | 2   | 3   | 4         | 5         |
-| Size (bytes): | 1    | 1    | 1   | 1   | 1         | 20        |
-| Value:        | 0x89 | 0x01 | Any | Any | 20 (0x14) | See below |
+| Field:        | CLA  | INS  | P1        | P2        | Data len  | Data      |
+|-------------- | ---- | ---- | --------- | --------- | --------- | --------- |
+| Offset:       | 0    | 1    | 2         | 3         | 4         | 5         |
+| Size (bytes): | 1    | 1    | 1         | 1         | 1         | 20        |
+| Value:        | 0x89 | 0x01 | 0x00/0x01 | 0x00/0x01 | 20 (0x14) | See below |
 
-Data:
+**P1**: Interactive mode with confirmation
+
+- 0x00: false (non-interactive mode)
+- 0x01: true (interactive mode)
+
+**P2**: Scheme
+
+- 0x00: ED25519
+- 0x01: SR25519
+
+**Data**:
 
 | Data             | Size (bytes) | Endianness | Value              |
 | ---------------- | ------------ | ---------- | ------------------ |
