@@ -2,6 +2,7 @@
 #![no_main]
 
 mod app;
+mod error;
 mod menu;
 mod settings;
 mod utils;

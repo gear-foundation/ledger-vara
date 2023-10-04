@@ -1,29 +1,49 @@
-use nanos_sdk::ecc::{self, Ed25519, SeedDerive};
+use crate::error::ErrorCode;
+use core::mem;
+use nanos_sdk::ecc::{CurvesId, Ed25519, SeedDerive};
+use schnorrkel::{ExpansionMode, MiniSecretKey};
 
-pub const fn bytes_to_u16(bytes: &[u8]) -> u16 {
-    let mut i = 0;
-    let mut acc = 0;
+const SCHEME_ED25519: u8 = 0;
+const SCHEME_SR25519: u8 = 1;
 
-    while i < bytes.len() {
-        let c = bytes[i];
-        match c {
-            b'0'..=b'9' => {
-                acc = (c - b'0') as u32;
-            }
-            _ => panic!("expected digit"),
-        }
-        i += 1;
-    }
-
-    if acc > 65535 {
-        panic!("too big version element value");
-    }
-
-    acc as u16
+#[repr(C)]
+struct PrivateKey {
+    curve: CurvesId,
+    keylength: usize,
+    pub key: [u8; 32],
 }
 
-pub fn get_public_key() -> [u8; 32] {
-    let path: [u32; 5] = ecc::make_bip32_path(b"m/44'/913'/0'/0/0");
-    let key = Ed25519::derive_from_path(&path).public_key().unwrap();
-    key.pubkey[1..33].try_into().unwrap()
+fn get_private_key(path: &[u32]) -> [u8; 32] {
+    let k: PrivateKey = unsafe { mem::transmute(Ed25519::derive_from_path(&path)) };
+    k.key
+}
+
+pub fn get_public_key(scheme: u8, path: &[u32]) -> Result<[u8; 32], ErrorCode> {
+    if path.len() != 5 {
+        return Err(ErrorCode::BadLen);
+    }
+    if path[0] != 0x8000002c || path[1] != 0x80000391 {
+        return Err(ErrorCode::BadPath);
+    }
+    let private_key = get_private_key(path);
+    let public_key = match scheme {
+        SCHEME_ED25519 => {
+            let pk = Ed25519::from(&private_key).public_key()?.pubkey;
+            let mut key = [0; 32];
+            for i in 0..key.len() {
+                key[i] = pk[64 - i];
+            }
+            if (pk[key.len()] & 1) != 0 {
+                key[key.len() - 1] |= 0x80;
+            }
+            key
+        }
+        SCHEME_SR25519 => MiniSecretKey::from_bytes(&private_key)?
+            .expand(ExpansionMode::Ed25519)
+            .to_public()
+            .to_bytes(),
+        _ => return Err(ErrorCode::BadP1P2),
+    };
+
+    Ok(public_key)
 }
