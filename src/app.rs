@@ -2,7 +2,7 @@ use crate::{
     error::ErrorCode,
     menu::{Menu, MenuAction, MenuPage},
     settings::Settings,
-    utils,
+    signer::Signer,
 };
 use nanos_sdk::{
     buttons::ButtonEvent,
@@ -13,7 +13,12 @@ const APDU_CLA: u8 = 0x89;
 
 const INS_GET_VERSION: u8 = 0x00;
 const INS_GET_PUBLIC_KEY: u8 = 0x01;
+const INS_SIGN: u8 = 0x02;
 const INS_QUIT: u8 = 0xFF;
+
+const COMMAND_START: u8 = 0x00;
+const COMMAND_APPEND: u8 = 0x01;
+const COMMAND_FINALIZE: u8 = 0x02;
 
 const MODE_INTERACTIVE: u8 = 0x01;
 
@@ -24,6 +29,8 @@ pub struct App {
     pub menu: MainMenu,
     /// Settings.
     pub settings: Settings,
+    /// Signer.
+    pub signer: Signer,
 }
 
 /// Main menu.
@@ -108,9 +115,8 @@ impl Menu for App {
 impl App {
     /// Handle button event.
     pub fn handle_button(&mut self, button: ButtonEvent) {
-        match self.handle_button_event(button) {
-            MenuAction::Exit => nanos_sdk::exit_app(0),
-            _ => (),
+        if let MenuAction::Exit = self.handle_button_event(button) {
+            nanos_sdk::exit_app(0);
         }
     }
 
@@ -132,25 +138,52 @@ impl App {
                 comm.append(&patch.to_be_bytes());
             }
             INS_GET_PUBLIC_KEY => {
-                let scheme = header.p2;
-                let data_len = comm.apdu_buffer[4];
-                if data_len != 20 {
-                    return Err(ErrorCode::BadLen);
-                }
-                let mut path = [0; 5];
-                for i in 0..5 {
-                    let idx = 5 + i * 4;
-                    path[i] = u32::from_le_bytes(comm.apdu_buffer[idx..idx + 4].try_into()?);
-                }
-                let key = utils::get_public_key(scheme, &path)?;
+                self.signer.clear();
+                self.signer.set_scheme(header.p2.try_into()?);
+                self.signer.set_path(get_path(comm)?);
+                let key = self.signer.get_public_key()?;
                 if header.p1 == MODE_INTERACTIVE {
                     return Err(ErrorCode::Unimplemented);
                 }
                 comm.append(&key);
+            }
+            INS_SIGN => {
+                let command = header.p1;
+                match command {
+                    COMMAND_START => {
+                        self.signer.clear();
+                        self.signer.set_scheme(header.p2.try_into()?);
+                        self.signer.set_path(get_path(comm)?);
+                    }
+                    COMMAND_APPEND => {
+                        let data_len = comm.apdu_buffer[4] as usize;
+                        let data = &comm.apdu_buffer[5..5 + data_len];
+                        self.signer.append_message(data)?;
+                    }
+                    COMMAND_FINALIZE => {
+                        let signature = self.signer.sign()?;
+                        self.signer.clear();
+                        comm.append(&signature);
+                    }
+                    _ => return Err(ErrorCode::BadP1P2),
+                }
             }
             INS_QUIT => nanos_sdk::exit_app(0),
             _ => return Err(ErrorCode::BadIns),
         }
         Ok(())
     }
+}
+
+fn get_path(comm: &Comm) -> Result<[u32; 5], ErrorCode> {
+    let data_len = comm.apdu_buffer[4];
+    if data_len != 20 {
+        return Err(ErrorCode::BadLen);
+    }
+    let mut path = [0; 5];
+    for (i, p) in path.iter_mut().enumerate() {
+        let idx = 5 + i * 4;
+        *p = u32::from_le_bytes(comm.apdu_buffer[idx..idx + 4].try_into()?);
+    }
+    Ok(path)
 }
