@@ -115,9 +115,8 @@ impl Menu for App {
 impl App {
     /// Handle button event.
     pub fn handle_button(&mut self, button: ButtonEvent) {
-        match self.handle_button_event(button) {
-            MenuAction::Exit => nanos_sdk::exit_app(0),
-            _ => (),
+        if let MenuAction::Exit = self.handle_button_event(button) {
+            nanos_sdk::exit_app(0);
         }
     }
 
@@ -182,9 +181,9 @@ fn get_path(comm: &Comm) -> Result<[u32; 5], ErrorCode> {
         return Err(ErrorCode::BadLen);
     }
     let mut path = [0; 5];
-    for i in 0..5 {
+    for (i, p) in path.iter_mut().enumerate() {
         let idx = 5 + i * 4;
-        path[i] = u32::from_le_bytes(comm.apdu_buffer[idx..idx + 4].try_into()?);
+        *p = u32::from_le_bytes(comm.apdu_buffer[idx..idx + 4].try_into()?);
     }
     Ok(path)
 }
