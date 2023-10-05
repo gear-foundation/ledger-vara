@@ -5,7 +5,7 @@ mod app;
 mod error;
 mod menu;
 mod settings;
-mod utils;
+mod signer;
 
 #[cfg(host_os = "macos")]
 mod macos_lib;
