@@ -7,6 +7,7 @@ mod get_public_key;
 mod menu;
 mod settings;
 mod signer;
+mod transcript;
 
 #[cfg(host_os = "macos")]
 mod macos_lib;

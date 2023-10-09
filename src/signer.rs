@@ -1,7 +1,7 @@
-use crate::error::ErrorCode;
+use crate::{error::ErrorCode, transcript::LedgerTranscript};
 use core::mem;
 use nanos_sdk::ecc::{CurvesId, Ed25519, SeedDerive};
-use schnorrkel::{signing_context, ExpansionMode, MiniSecretKey};
+use schnorrkel::{ExpansionMode, MiniSecretKey};
 
 const MAX_MESSAGE_LEN: usize = 256;
 
@@ -125,7 +125,9 @@ impl Signer {
                 let pair = MiniSecretKey::from_bytes(&private_key)?
                     .expand(ExpansionMode::Ed25519)
                     .to_keypair();
-                pair.sign(signing_context(b"").bytes(message)).to_bytes()
+                let mut transcript: LedgerTranscript = LedgerTranscript::new();
+                transcript.append(message);
+                pair.sign(transcript).to_bytes()
             }
         };
         Ok(signature)
