@@ -1,8 +1,9 @@
 use crate::{
     error::ErrorCode,
+    get_public_key::GetPublicKey,
     menu::{Menu, MenuAction, MenuPage},
     settings::Settings,
-    signer::Signer,
+    signer::{Scheme, Signer},
 };
 use nanos_sdk::{
     buttons::ButtonEvent,
@@ -139,28 +140,40 @@ impl App {
             }
             INS_GET_PUBLIC_KEY => {
                 self.signer.clear();
-                self.signer.set_scheme(header.p2.try_into()?);
+                self.signer.set_scheme(header.p1.try_into()?);
                 self.signer.set_path(get_path(comm)?);
                 let key = self.signer.get_public_key()?;
-                if header.p1 == MODE_INTERACTIVE {
-                    return Err(ErrorCode::Unimplemented);
+                if header.p2 == MODE_INTERACTIVE {
+                    let mut get_public_key = GetPublicKey::new(&key);
+                    let action = get_public_key.exec();
+                    self.show();
+                    if let MenuAction::Accept = action {
+                        comm.append(&key);
+                    } else {
+                        return Err(ErrorCode::UserCancelled);
+                    }
                 }
                 comm.append(&key);
             }
             INS_SIGN => {
-                let command = header.p1;
+                let scheme: Scheme = header.p1.try_into()?;
+                let command = header.p2;
                 match command {
                     COMMAND_START => {
                         self.signer.clear();
-                        self.signer.set_scheme(header.p2.try_into()?);
+                        self.signer.set_scheme(scheme);
                         self.signer.set_path(get_path(comm)?);
                     }
                     COMMAND_APPEND => {
+                        self.signer.check_scheme(scheme)?;
+
                         let data_len = comm.apdu_buffer[4] as usize;
                         let data = &comm.apdu_buffer[5..5 + data_len];
                         self.signer.append_message(data)?;
                     }
                     COMMAND_FINALIZE => {
+                        self.signer.check_scheme(scheme)?;
+
                         let signature = self.signer.sign()?;
                         self.signer.clear();
                         comm.append(&signature);

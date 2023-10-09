@@ -1,6 +1,9 @@
 use include_gif::include_gif;
 use nanos_ui::{
-    bagls::{Icon, Label, COGGLE_ICON, DASHBOARD_X_ICON, LEFT_ARROW, RIGHT_ARROW},
+    bagls::{
+        Icon, Label, CERTIFICATE_ICON, CHECKMARK_ICON, COGGLE_ICON, CROSS_ICON, DASHBOARD_X_ICON,
+        LEFT_ARROW, RIGHT_ARROW,
+    },
     bitmaps::{Glyph, BACK},
     layout::{Draw, Location},
     SCREEN_HEIGHT, SCREEN_WIDTH,
@@ -81,7 +84,7 @@ impl<'a> MenuPage<'a> {
         }
     }
 
-    pub const fn text(self, text: &'static str) -> Self {
+    pub const fn text(self, text: &'a str) -> Self {
         let text = Text {
             text,
             bold: false,
@@ -91,7 +94,7 @@ impl<'a> MenuPage<'a> {
         self.add(PageItem::Text(text))
     }
 
-    pub const fn bold_text(self, text: &'static str) -> Self {
+    pub const fn bold_text(self, text: &'a str) -> Self {
         let text = Text {
             text,
             bold: true,
@@ -121,6 +124,18 @@ impl<'a> MenuPage<'a> {
 
     pub const fn back_icon(self) -> Self {
         self.icon(Icon::from(&BACK))
+    }
+
+    pub const fn review_icon(self) -> Self {
+        self.icon(CERTIFICATE_ICON)
+    }
+
+    pub const fn accept_icon(self) -> Self {
+        self.icon(CHECKMARK_ICON)
+    }
+
+    pub const fn decline_icon(self) -> Self {
+        self.icon(CROSS_ICON)
     }
 
     pub fn hide(&self) {

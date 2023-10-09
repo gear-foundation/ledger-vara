@@ -3,6 +3,7 @@
 
 mod app;
 mod error;
+mod get_public_key;
 mod menu;
 mod settings;
 mod signer;

@@ -12,7 +12,7 @@ pub struct Signer {
     message: [u8; MAX_MESSAGE_LEN],
 }
 
-#[derive(Default)]
+#[derive(Default, PartialEq)]
 #[repr(u8)]
 pub enum Scheme {
     #[default]
@@ -64,6 +64,13 @@ impl Signer {
 
     pub fn set_scheme(&mut self, scheme: Scheme) {
         self.scheme = scheme;
+    }
+
+    pub fn check_scheme(&self, scheme: Scheme) -> Result<(), ErrorCode> {
+        if self.scheme != scheme {
+            return Err(ErrorCode::BadP1P2);
+        }
+        Ok(())
     }
 
     pub fn append_message(&mut self, data: &[u8]) -> Result<(), ErrorCode> {

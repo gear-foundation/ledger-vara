@@ -4,6 +4,7 @@ use nanos_sdk::buttons::ButtonEvent;
 use nanos_ui::{
     bagls::{LEFT_S_ARROW, RIGHT_S_ARROW},
     layout::Draw,
+    ui,
 };
 
 pub use self::page::MenuPage;
@@ -19,6 +20,7 @@ pub trait Menu {
     }
 
     fn show(&self) {
+        ui::clear_screen();
         self.page().show();
     }
 
@@ -60,4 +62,6 @@ pub enum MenuAction {
     Nothing,
     Update,
     Exit,
+    Accept,
+    Decline,
 }
