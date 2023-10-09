@@ -202,15 +202,15 @@ Example (v1.20.2840): `0x0001'0014'0B18'9000`
 | Size (bytes): | 1    | 1    | 1         | 1         | 1         | 20        |
 | Value:        | 0x89 | 0x01 | 0x00/0x01 | 0x00/0x01 | 20 (0x14) | See below |
 
-**P1**: Interactive mode with confirmation
-
-- 0x00: false (non-interactive mode)
-- 0x01: true (interactive mode)
-
-**P2**: Scheme
+**P1**: Scheme
 
 - 0x00: ED25519
 - 0x01: SR25519
+
+**P2**: Interactive mode with confirmation
+
+- 0x00: false (non-interactive mode)
+- 0x01: true (interactive mode)
 
 **Data**:
 

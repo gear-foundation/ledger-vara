@@ -5,6 +5,7 @@ authors = ["Gear Foundation"]
 edition = "2021"
 
 [dependencies]
+hex = { version = "0.4.3", default-features = false }
 include_gif = { git = "https://github.com/LedgerHQ/sdk_include_gif" }
 nanos_sdk = { git = "https://github.com/LedgerHQ/ledger-nanos-sdk.git" }
 nanos_ui = { git = "https://github.com/LedgerHQ/ledger-nanos-ui.git" }
