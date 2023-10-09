@@ -97,14 +97,11 @@ impl GetPublicKey {
         self.show();
         let mut state = ButtonsState::new();
         loop {
-            match ui::get_event(&mut state) {
-                Some(button) => {
-                    let action = self.handle_button_event(button);
-                    if matches!(action, MenuAction::Accept | MenuAction::Decline) {
-                        return action;
-                    }
+            if let Some(button) = ui::get_event(&mut state) {
+                let action = self.handle_button_event(button);
+                if matches!(action, MenuAction::Accept | MenuAction::Decline) {
+                    return action;
                 }
-                _ => (),
             }
         }
     }

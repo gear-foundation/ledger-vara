@@ -5,15 +5,18 @@ authors = ["Gear Foundation"]
 edition = "2021"
 
 [dependencies]
-hex = { version = "0.4.3", default-features = false }
+hex = { version = "0.4", default-features = false }
 include_gif = { git = "https://github.com/LedgerHQ/sdk_include_gif" }
+merlin = { version = "3.0", default-features=false }
 nanos_sdk = { git = "https://github.com/LedgerHQ/ledger-nanos-sdk.git" }
 nanos_ui = { git = "https://github.com/LedgerHQ/ledger-nanos-ui.git" }
-schnorrkel = { version = "0.11.2", default-features = false }
+rand_core = "0.6"
+schnorrkel = { version = "0.11", default-features = false }
 
 [profile.release]
 opt-level = 'z'
 lto = true
+codegen-units = 1
 
 [features]
 pending_review_screen = ["nanos_sdk/pending_review_screen"]
