@@ -1,3 +1,4 @@
 target
-app*.json
+/app*.json
 artifact/
+app*.hex
