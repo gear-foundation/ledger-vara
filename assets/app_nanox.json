@@ -1,0 +1,18 @@
+{
+  "apiLevel": "5",
+  "binary": "app_nanox.hex",
+  "dataSize": 0,
+  "derivationPath": {
+    "curves": [
+      "ed25519"
+    ],
+    "paths": [
+      "44'/913'"
+    ]
+  },
+  "flags": "0x200",
+  "icon": "icon_x.gif",
+  "name": "Vara",
+  "targetId": "0x33000004",
+  "version": "0.0.1"
+}

@@ -1,0 +1,18 @@
+{
+  "apiLevel": "1",
+  "binary": "app_nanosplus.hex",
+  "dataSize": 0,
+  "derivationPath": {
+    "curves": [
+      "ed25519"
+    ],
+    "paths": [
+      "44'/913'"
+    ]
+  },
+  "flags": "0",
+  "icon": "icon_x.gif",
+  "name": "Vara",
+  "targetId": "0x33100004",
+  "version": "0.0.1"
+}

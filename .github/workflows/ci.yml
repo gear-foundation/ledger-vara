@@ -3,6 +3,7 @@ name: CI
 on:
   push:
     branches: [master]
+    tags: ["*"]
   pull_request:
     branches: [master]
   workflow_dispatch:
@@ -43,14 +44,29 @@ jobs:
           cargo ledger build nanox
 
       - name: Build app for Speculos
-        if: github.event_name == 'push'
+        if: github.event_name != 'pull_request'
         run: cargo ledger build nanosplus -- -F speculos
 
       - name: Deploy
-        if: github.event_name == 'push'
+        if: github.event_name != 'pull_request'
         uses: dawidd6/action-ansible-playbook@v2
         with:
           directory: ansible
           playbook: update-apps.yml
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           inventory: ledger.vara.rs
+
+      - name: Prepare release
+        # TODO: Uncomment
+        #if: startsWith(github.ref, 'refs/tags/')
+        run:
+          make
+          cd assets
+          XZ_OPT=-9 tar -cvJf ../app-vara.tar.xz app_nano* icon_*.gif
+
+      - name: Publish release
+        # TODO: Uncomment
+        #if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: app-vara.tar.xz

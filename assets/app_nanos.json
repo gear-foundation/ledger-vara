@@ -1,0 +1,17 @@
+{
+  "binary": "app_nanos.hex",
+  "dataSize": 0,
+  "derivationPath": {
+    "curves": [
+      "ed25519"
+    ],
+    "paths": [
+      "44'/913'"
+    ]
+  },
+  "flags": "0",
+  "icon": "icon_s.gif",
+  "name": "Vara",
+  "targetId": "0x31100004",
+  "version": "0.0.1"
+}
