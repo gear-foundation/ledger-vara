@@ -75,6 +75,7 @@ jobs:
           make
           cd assets
           XZ_OPT=-9 tar -cvJf ../app-vara.tar.xz app_nano* icon_*.gif
+          cd ..
           awk '(/^## \[[0-9]+\.[0-9]+\.[0-9]+\]/ || /^\[unreleased\]/) && STATE=="show" { exit }
               STATE=="show";
               /^## \[${{ needs.prepare.outputs.version }}\]/ { STATE="show" }' CHANGELOG.md \
