@@ -1,10 +1,12 @@
 mod page;
 
-use nanos_sdk::buttons::ButtonEvent;
-use nanos_ui::{
-    bagls::{LEFT_S_ARROW, RIGHT_S_ARROW},
-    layout::Draw,
-    ui,
+use ledger_device_sdk::{
+    buttons::ButtonEvent,
+    ui::{
+        bagls::{LEFT_S_ARROW, RIGHT_S_ARROW},
+        gadgets,
+        layout::Draw,
+    },
 };
 
 pub use self::page::MenuPage;
@@ -20,7 +22,7 @@ pub trait Menu {
     }
 
     fn show(&self) {
-        ui::clear_screen();
+        gadgets::clear_screen();
         self.page().show();
     }
 

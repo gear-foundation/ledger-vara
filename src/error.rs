@@ -1,5 +1,5 @@
 use core::{array::TryFromSliceError, num::ParseIntError};
-use nanos_sdk::{ecc::CxError, io::Reply};
+use ledger_device_sdk::{ecc::CxError, io::Reply};
 use schnorrkel::SignatureError;
 
 #[derive(Copy, Clone)]

@@ -1,6 +1,6 @@
 use crate::{error::ErrorCode, transcript::LedgerTranscript};
 use core::mem;
-use nanos_sdk::ecc::{CurvesId, Ed25519, SeedDerive};
+use ledger_device_sdk::ecc::{CurvesId, Ed25519, SeedDerive};
 use schnorrkel::{ExpansionMode, MiniSecretKey};
 
 const MAX_MESSAGE_LEN: usize = 256;

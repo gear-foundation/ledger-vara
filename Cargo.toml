@@ -1,15 +1,14 @@
 [package]
 name = "app-vara"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Gear Foundation"]
 edition = "2021"
 
 [dependencies]
 hex = { version = "0.4", default-features = false }
-include_gif = { git = "https://github.com/LedgerHQ/sdk_include_gif" }
+include_gif = "1.0.1"
+ledger_device_sdk = "1.1.0"
 merlin = { version = "3.0", default-features=false }
-nanos_sdk = { git = "https://github.com/LedgerHQ/ledger-nanos-sdk.git" }
-nanos_ui = { git = "https://github.com/LedgerHQ/ledger-nanos-ui.git" }
 rand_core = "0.6"
 schnorrkel = { version = "0.11", default-features = false }
 
@@ -19,8 +18,8 @@ lto = true
 codegen-units = 1
 
 [features]
-pending_review_screen = ["nanos_sdk/pending_review_screen"]
-speculos = ["nanos_sdk/speculos", "nanos_ui/speculos"]
+pending_review_screen = ["ledger_device_sdk/pending_review_screen"]
+speculos = ["ledger_device_sdk/speculos"]
 
 [package.metadata.ledger]
 name = "Vara"

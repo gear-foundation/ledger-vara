@@ -1,7 +1,6 @@
 use crate::menu::{Menu, MenuAction, MenuPage};
 use core::str;
-use nanos_sdk::buttons::ButtonsState;
-use nanos_ui::ui;
+use ledger_device_sdk::{buttons::ButtonsState, ui::gadgets};
 
 /// Get public key in interactive mode.
 pub struct GetPublicKey {
@@ -97,7 +96,7 @@ impl GetPublicKey {
         self.show();
         let mut state = ButtonsState::new();
         loop {
-            if let Some(button) = ui::get_event(&mut state) {
+            if let Some(button) = gadgets::get_event(&mut state) {
                 let action = self.handle_button_event(button);
                 if matches!(action, MenuAction::Accept | MenuAction::Decline) {
                     return action;
