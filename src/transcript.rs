@@ -1,5 +1,5 @@
+use ledger_device_sdk::random::LedgerRng;
 use merlin::Transcript;
-use nanos_sdk::random::LedgerRng;
 use rand_core::{CryptoRng, RngCore};
 use schnorrkel::context::SigningTranscript;
 

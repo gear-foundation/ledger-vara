@@ -5,7 +5,7 @@ use crate::{
     settings::Settings,
     signer::{Scheme, Signer},
 };
-use nanos_sdk::{
+use ledger_device_sdk::{
     buttons::ButtonEvent,
     io::{ApduHeader, Comm},
 };
@@ -117,7 +117,7 @@ impl App {
     /// Handle button event.
     pub fn handle_button(&mut self, button: ButtonEvent) {
         if let MenuAction::Exit = self.handle_button_event(button) {
-            nanos_sdk::exit_app(0);
+            ledger_device_sdk::exit_app(0);
         }
     }
 
@@ -181,7 +181,7 @@ impl App {
                     _ => return Err(ErrorCode::BadP1P2),
                 }
             }
-            INS_QUIT => nanos_sdk::exit_app(0),
+            INS_QUIT => ledger_device_sdk::exit_app(0),
             _ => return Err(ErrorCode::BadIns),
         }
         Ok(())

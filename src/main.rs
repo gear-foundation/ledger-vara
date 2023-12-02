@@ -13,9 +13,9 @@ mod transcript;
 mod macos_lib;
 
 use crate::{app::App, menu::Menu};
-use nanos_sdk::io::{Comm, Event};
+use ledger_device_sdk::io::{Comm, Event};
 
-nanos_sdk::set_panic!(nanos_sdk::exiting_panic);
+ledger_device_sdk::set_panic!(ledger_device_sdk::exiting_panic);
 
 #[no_mangle]
 extern "C" fn sample_main() {
