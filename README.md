@@ -66,7 +66,7 @@ Vara application for Ledger Nano S Plus and X.
     cargo ledger build nanox
     ```
 
-2. Find `app-vara` file in the `target/nano{s|splus|x}/release` directory.
+2. Find the `app-vara` file in the `target/nano{s|splus|x}/release` directory.
 
 ## Upload to the Ledger S Plus
 
@@ -88,10 +88,10 @@ Vara application for Ledger Nano S Plus and X.
 
 2. Enter recovery mode:
 
-    - Unplug device, press left and right buttons simultaneously and while keeping them pressed, plug device back
+    - Unplug the device, press the left and right buttons simultaneously and while keeping them pressed, plug the device back
     - Wait until the menu appears and choose **Recovery mode**
 
-3. Onboard the device with PIN=1111 and mnemonic phrase:
+3. Onboard the device with PIN=1111 and the mnemonic phrase:
 
     ```bash
     ledgerctl onboard 1111 "bottom drive obey lake curtain smoke basket hold race lonely fit walk"
@@ -119,8 +119,8 @@ Vara application for Ledger Nano S Plus and X.
 2. Use arrow keys (← and →) to simulate pressing Ledger's buttons (left and right).
 3. Use the down arrow key (↓) to simulate pressing both Ledger's buttons simultaneously.
 4. The application will be automatically restarted after quitting. Please reload the page after waiting for 5-10 seconds. The server may return a 502 error for some time; please try to reload the page again.
-5. Note that application is stateful and will not work properly if there are several users at the same time.
-6. For available APDU commands, see documentation (will be available soon).
+5. Note that the application is stateful and will not work properly if there are several users at the same time.
+6. For available APDU commands, see the documentation below.
 
 ## Documentation
 
