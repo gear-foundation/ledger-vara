@@ -1,5 +1,5 @@
 use include_gif::include_gif;
-use ledger_device_sdk::ui::{
+use ledger_device_sdk_ui::{
     bagls::{
         Icon, Label, CERTIFICATE_ICON, CHECKMARK_ICON, COGGLE_ICON, CROSS_ICON, DASHBOARD_X_ICON,
         LEFT_ARROW, RIGHT_ARROW,

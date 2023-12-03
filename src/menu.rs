@@ -1,12 +1,10 @@
 mod page;
 
-use ledger_device_sdk::{
-    buttons::ButtonEvent,
-    ui::{
-        bagls::{LEFT_S_ARROW, RIGHT_S_ARROW},
-        gadgets,
-        layout::Draw,
-    },
+use ledger_device_sdk::buttons::ButtonEvent;
+use ledger_device_sdk_ui::{
+    bagls::{LEFT_S_ARROW, RIGHT_S_ARROW},
+    layout::Draw,
+    ui as gadgets,
 };
 
 pub use self::page::MenuPage;

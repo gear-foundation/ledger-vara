@@ -1,6 +1,7 @@
 use crate::menu::{Menu, MenuAction, MenuPage};
 use core::str;
-use ledger_device_sdk::{buttons::ButtonsState, ui::gadgets};
+use ledger_device_sdk::buttons::ButtonsState;
+use ledger_device_sdk_ui::ui as gadgets;
 
 /// Get public key in interactive mode.
 pub struct GetPublicKey {
